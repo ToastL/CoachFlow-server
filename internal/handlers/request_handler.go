@@ -30,10 +30,7 @@ func CreateRequest(c fiber.Ctx) error {
 }
 
 func GetRequests(c fiber.Ctx) error {
-	userID := c.Locals("userID").(uint)
-	if err != nil {
-		return response.Error(c, fiber.StatusBadRequest, "Invalid user ID")
-	}
+	userID := c.Locals("userID").(int64)
 
 	requests, err := repositories.GetRequests(userID)
 	if err != nil {
