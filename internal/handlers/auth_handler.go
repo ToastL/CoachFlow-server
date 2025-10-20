@@ -37,7 +37,7 @@ func Login(c fiber.Ctx) error {
 		})
 	}
 
-	token, err := utils.GenerateJWT(1, body.Login)
+	token, err := utils.GenerateJWT(uint(id), email)
 	if err != nil {
 		return response.Error(c, fiber.StatusInternalServerError, "Could not generate token")
 	}

@@ -30,7 +30,7 @@ func CreateRequest(c fiber.Ctx) error {
 }
 
 func GetRequests(c fiber.Ctx) error {
-	userID, err := strconv.ParseInt(c.Params("userId"), 10, 64)
+	userID := c.Locals("userID").(uint)
 	if err != nil {
 		return response.Error(c, fiber.StatusBadRequest, "Invalid user ID")
 	}

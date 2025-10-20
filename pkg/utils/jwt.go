@@ -1,20 +1,36 @@
 package utils
 
 import (
+	"crypto/rand"
+	"encoding/hex"
 	"errors"
+	"log"
 	"os"
 	"time"
 	
 	"github.com/golang-jwt/jwt/v5"
 )
 
-var secretKey = []byte(os.Getenv("JWT_SECRET"))
-
 type Claims struct {
 	UserID uint `json:"user_id"`
 	Email  string `json:"email"`
 	jwt.RegisteredClaims
 }
+
+func init() {
+	secret := os.Getenv("JWT_SECRET")
+	if secret == "" {
+		bytes := make([]byte, 32)
+		if _, err := rand.Read(bytes); err != nil {
+			log.Fatal("Failed to generate random JWT secret:", err)
+		}
+		secret = hex.EncodeToString(bytes)
+		log.Println("WARNING: Using randomly generated JWT secret. Set JWT_SECRET environment variable for production!")
+	}
+	secretKey = []byte(secret)
+}
+
+var secretKey []byte
 
 func GenerateJWT(userID uint, email string) (string, error) {
 	claims := &Claims{

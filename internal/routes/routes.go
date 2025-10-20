@@ -22,6 +22,7 @@ func SetupRoutes(app *fiber.App) {
 	requests := api.Group("/requests", middlewares.AuthMiddleware)
 	requests.Post("/", handlers.CreateRequest)
 	requests.Get("/", handlers.GetRequests)
+	requests.Get("/sent", handlers.GetSentRequests)
 	requests.Put("/:id/accept", handlers.AcceptRequest)
 	requests.Put("/:id/reject", handlers.RejectRequest)
 

@@ -1,5 +1,5 @@
 CREATE TABLE users (
-  id SERIAL PRIMARY KEY DEFAULT,
+  id SERIAL PRIMARY KEY,
   username TEXT UNIQUE NOT NULL,
   email TEXT UNIQUE NOT NULL,
   password TEXT NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE plan_workout (
 CREATE TABLE trainer_clients (
   trainer_id INT REFERENCES users(id) ON DELETE CASCADE,
   client_id INT REFERENCES users(id) ON DELETE CASCADE,
-  PRIMARY KEY (plan_id, workout_id)
+  PRIMARY KEY (trainer_id, workout_id)
 );
 
 CREATE TABLE requests (
