@@ -26,6 +26,10 @@ func SetupRoutes(app *fiber.App) {
 	requests.Put("/:id/accept", handlers.AcceptRequest)
 	requests.Put("/:id/reject", handlers.RejectRequest)
 
+	clientPlan := api.Group("/clients", middlewares.AuthMiddleware)
+	clientPlan.Post("/:clientId/plans", handlers.AssignPlan)
+	clientPlan.Get("/:clientId/plans", handlers.GetClientPlans)
+
 	// Workouts
 	workouts := api.Group("/workouts")
 	workouts.Get("/", handlers.GetAllWorkouts)

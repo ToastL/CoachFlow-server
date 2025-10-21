@@ -18,11 +18,20 @@ CREATE TABLE workouts (
 
 CREATE TABLE plans (
   id SERIAL PRIMARY KEY,
-  creator_id INT REFERENCES users(id) ON DELETE CASCADE,
+  user_id INT REFERENCES users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
   description TEXT,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE client_plans (
+  id SERIAL PRIMARY KEY,
+  trainer_id INT REFERENCES users(id) ON DELETE CASCADE,
+  client_id INT REFERENCES users(id) ON DELETE CASCADE,
+  plan_id INT REFERENCES plans(id) ON DELETE CASCADE,
+  assigned_at TIMESTAMP DEFAULT NOW(),
+  status TEXT DEFAULT 'active'  -- 'active', 'completed', 'cancelled'
 );
 
 CREATE TABLE trainer_clients (
