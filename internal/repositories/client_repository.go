@@ -1,10 +1,53 @@
 package repositories
 
 import (
-	"context"
 	"coachflow/internal/db"
 	"coachflow/internal/models"
+	"context"
 )
+
+func GetClients(trainerID uint) ([]models.User, error) {
+	rows, err := db.DB.Query(context.Background(),
+		`SELECT u.id, u.username, u.email, u.password, u.created_at
+		 FROM users u
+		 JOIN trainer_clients tc ON tc.client_id = u.id
+		 WHERE tc.trainer_id = $1`, trainerID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var clients []models.User
+	for rows.Next() {
+		var u models.User
+		if err := rows.Scan(&u.ID, &u.Username, &u.Email, &u.Password, &u.CreatedAt); err != nil {
+			return nil, err
+		}
+		clients = append(clients, u)
+	}
+
+	if len(clients) == 0 {
+		rows2, err := db.DB.Query(context.Background(),
+			`SELECT DISTINCT u.id, u.username, u.email, u.password, u.created_at
+			 FROM users u
+			 JOIN client_plans cp ON cp.client_id = u.id
+			 WHERE cp.trainer_id = $1`, trainerID)
+		if err != nil {
+			return nil, err
+		}
+		defer rows2.Close()
+
+		for rows2.Next() {
+			var u models.User
+			if err := rows2.Scan(&u.ID, &u.Username, &u.Email, &u.Password, &u.CreatedAt); err != nil {
+				return nil, err
+			}
+			clients = append(clients, u)
+		}
+	}
+
+	return clients, nil
+}
 
 func AssignPlan(cp models.ClientPlan) error {
 	_, err := db.DB.Exec(context.Background(),

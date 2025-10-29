@@ -9,7 +9,7 @@ import (
 	"coachflow/internal/config"
 	"coachflow/internal/db"
 	"coachflow/internal/routes"
-	"coachflow/internal/socket"
+	// "coachflow/internal/socket"
 )
 
 type App struct {
@@ -29,12 +29,6 @@ func NewApp() *App {
 		AllowMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		AllowHeaders: []string{"Origin", "Content-Type", "Accept", "Authorization"},
 	}))
-
-	sio := socket.InitSocket()
-	f.Get("/socket/*", func(c *fiber.Ctx) error {
-		sio.ServeHTTP(c.Context())
-		return nil
-	})
 
 	routes.SetupRoutes(f)
 

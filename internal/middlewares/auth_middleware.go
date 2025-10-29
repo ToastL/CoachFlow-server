@@ -3,9 +3,10 @@ package middlewares
 import (
 	"strings"
 
-	"github.com/gofiber/fiber/v3"
 	"coachflow/pkg/response"
 	"coachflow/pkg/utils"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 func AuthMiddleware(c fiber.Ctx) error {

@@ -1,11 +1,12 @@
 package handlers
 
 import (
-	"coachflow/internal/repositories"
 	"coachflow/internal/models"
+	"coachflow/internal/repositories"
 	"coachflow/pkg/response"
-	"github.com/gofiber/fiber/v3"
 	"strconv"
+
+	"github.com/gofiber/fiber/v3"
 )
 
 func CreateRequest(c fiber.Ctx) error {
@@ -30,7 +31,7 @@ func CreateRequest(c fiber.Ctx) error {
 }
 
 func GetRequests(c fiber.Ctx) error {
-	userID := c.Locals("userID").(int64)
+	userID := c.Locals("userID").(uint)
 
 	requests, err := repositories.GetRequests(userID)
 	if err != nil {
@@ -41,10 +42,7 @@ func GetRequests(c fiber.Ctx) error {
 }
 
 func GetSentRequests(c fiber.Ctx) error {
-	userID, err := strconv.ParseInt(c.Params("userId"), 10, 64)
-	if err != nil {
-		return response.Error(c, fiber.StatusBadRequest, "Invalid user ID")
-	}
+	userID := c.Locals("userID").(uint)
 
 	requests, err := repositories.GetSentRequests(userID)
 	if err != nil {

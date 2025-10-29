@@ -4,9 +4,21 @@ import (
 	"coachflow/internal/models"
 	"coachflow/internal/repositories"
 	"coachflow/pkg/response"
-	"github.com/gofiber/fiber/v3"
 	"strconv"
+
+	"github.com/gofiber/fiber/v3"
 )
+
+func GetClients(c fiber.Ctx) error {
+	trainerID := c.Locals("userID").(uint)
+
+	clients, err := repositories.GetClients(trainerID)
+	if err != nil {
+		return response.Error(c, fiber.StatusInternalServerError, "Failed to fetch clients")
+	}
+
+	return response.JSON(c, fiber.StatusOK, fiber.Map{"clients": clients})
+}
 
 func AssignPlan(c fiber.Ctx) error {
 	trainerID := c.Locals("userID").(int64)

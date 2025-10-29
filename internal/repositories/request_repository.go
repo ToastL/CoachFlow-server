@@ -1,9 +1,9 @@
 package repositories
 
 import (
-	"context"
 	"coachflow/internal/db"
 	"coachflow/internal/models"
+	"context"
 )
 
 func CreateRequest(r models.Request) error {
@@ -13,12 +13,12 @@ func CreateRequest(r models.Request) error {
 	return err
 }
 
-func GetRequests(userID int64) ([]models.Request, error) {
+func GetRequests(userID uint) ([]models.Request, error) {
 	rows, err := db.DB.Query(context.Background(),
 		`SELECT id, from_id, to_id, type, status, created_at
 		 FROM requests
 		 WHERE to_id=$1
-		 ORDER BY created_at DESC`)
+		 ORDER BY created_at DESC`, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -35,12 +35,12 @@ func GetRequests(userID int64) ([]models.Request, error) {
 	return requests, nil
 }
 
-func GetSentRequests(userID int64) ([]models.Request, error) {
+func GetSentRequests(userID uint) ([]models.Request, error) {
 	rows, err := db.DB.Query(context.Background(),
 		`SELECT id, from_id, to_id, type, status, created_at
 		 FROM requests
 		 WHERE from_id=$1
-		 ORDER BY created_at DESC`)
+		 ORDER BY created_at DESC`, userID)
 	if err != nil {
 		return nil, err
 	}
